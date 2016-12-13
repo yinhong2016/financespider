@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sevencolor.domain.dao.RebalanceStatisticsInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
+		<id column="dbID" property="dbid" jdbcType="INTEGER" />
+		<result column="stockSymbol" property="stocksymbol" jdbcType="VARCHAR" />
+		<result column="stockName" property="stockname" jdbcType="VARCHAR" />
+		<result column="totalWeight" property="totalweight" jdbcType="VARCHAR" />
+		<result column="createTime" property="createtime" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		dbID, stockSymbol, stockName, totalWeight, createTime
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from rebalancestatistics
+		where dbID = #{dbid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		rebalancestatistics
+		where dbID = #{dbid,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo"
+		useGeneratedKeys="true" keyProperty="dbid">
+		insert into rebalancestatistics
+		(stockSymbol, stockName,
+		totalWeight, createTime)
+		values
+		(#{stocksymbol,jdbcType=VARCHAR},
+		#{stockname,jdbcType=VARCHAR},
+		#{totalweight,jdbcType=VARCHAR},
+		#{createtime,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo"
+		useGeneratedKeys="true" keyProperty="dbid">
+		insert into rebalancestatistics
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="stocksymbol != null">
+				stockSymbol,
+			</if>
+			<if test="stockname != null">
+				stockName,
+			</if>
+			<if test="totalweight != null">
+				totalWeight,
+			</if>
+			<if test="createtime != null">
+				createTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="stocksymbol != null">
+				#{stocksymbol,jdbcType=VARCHAR},
+			</if>
+			<if test="stockname != null">
+				#{stockname,jdbcType=VARCHAR},
+			</if>
+			<if test="totalweight != null">
+				#{totalweight,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
+		update rebalancestatistics
+		<set>
+			<if test="stocksymbol != null">
+				stockSymbol = #{stocksymbol,jdbcType=VARCHAR},
+			</if>
+			<if test="stockname != null">
+				stockName = #{stockname,jdbcType=VARCHAR},
+			</if>
+			<if test="totalweight != null">
+				totalWeight = #{totalweight,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where dbID = #{dbid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
+		update
+		rebalancestatistics
+		set stockSymbol = #{stocksymbol,jdbcType=VARCHAR},
+		stockName = #{stockname,jdbcType=VARCHAR},
+		totalWeight =
+		#{totalweight,jdbcType=VARCHAR},
+		createTime =
+		#{createtime,jdbcType=VARCHAR}
+		where dbID = #{dbid,jdbcType=INTEGER}
+	</update>
+</mapper>
