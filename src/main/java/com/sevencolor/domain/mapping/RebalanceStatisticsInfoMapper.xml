@@ -3,26 +3,26 @@
 <mapper namespace="com.sevencolor.domain.dao.RebalanceStatisticsInfoMapper">
 	<resultMap id="BaseResultMap"
 		type="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
-		<id column="dbID" property="dbid" jdbcType="INTEGER" />
+		<id column="dbID" property="dbid" jdbcType="BIGINT" />
 		<result column="stockSymbol" property="stocksymbol" jdbcType="VARCHAR" />
 		<result column="stockName" property="stockname" jdbcType="VARCHAR" />
 		<result column="totalWeight" property="totalweight" jdbcType="VARCHAR" />
-		<result column="createTime" property="createtime" jdbcType="VARCHAR" />
+		<result column="createTime" property="createtime" jdbcType="BIGINT" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		dbID, stockSymbol, stockName, totalWeight, createTime
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
+		parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from rebalancestatistics
-		where dbID = #{dbid,jdbcType=INTEGER}
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
 		rebalancestatistics
-		where dbID = #{dbid,jdbcType=INTEGER}
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</delete>
 	<insert id="insert" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
@@ -33,7 +33,7 @@
 		(#{stocksymbol,jdbcType=VARCHAR},
 		#{stockname,jdbcType=VARCHAR},
 		#{totalweight,jdbcType=VARCHAR},
-		#{createtime,jdbcType=VARCHAR})
+		#{createtime,jdbcType=BIGINT})
 	</insert>
 	<insert id="insertSelective" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
@@ -63,7 +63,7 @@
 				#{totalweight,jdbcType=VARCHAR},
 			</if>
 			<if test="createtime != null">
-				#{createtime,jdbcType=VARCHAR},
+				#{createtime,jdbcType=BIGINT},
 			</if>
 		</trim>
 	</insert>
@@ -80,10 +80,10 @@
 				totalWeight = #{totalweight,jdbcType=VARCHAR},
 			</if>
 			<if test="createtime != null">
-				createTime = #{createtime,jdbcType=VARCHAR},
+				createTime = #{createtime,jdbcType=BIGINT},
 			</if>
 		</set>
-		where dbID = #{dbid,jdbcType=INTEGER}
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
 		update
@@ -93,7 +93,7 @@
 		totalWeight =
 		#{totalweight,jdbcType=VARCHAR},
 		createTime =
-		#{createtime,jdbcType=VARCHAR}
-		where dbID = #{dbid,jdbcType=INTEGER}
+		#{createtime,jdbcType=BIGINT}
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</update>
 </mapper>

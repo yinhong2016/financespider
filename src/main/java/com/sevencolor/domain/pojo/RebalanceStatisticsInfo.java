@@ -1,7 +1,7 @@
 package com.sevencolor.domain.pojo;
 
 public class RebalanceStatisticsInfo {
-  private Integer dbid;
+  private Long dbid;
 
   private String stocksymbol;
 
@@ -9,13 +9,13 @@ public class RebalanceStatisticsInfo {
 
   private String totalweight;
 
-  private String createtime;
+  private Long createtime;
 
-  public Integer getDbid() {
+  public Long getDbid() {
     return dbid;
   }
 
-  public void setDbid(Integer dbid) {
+  public void setDbid(Long dbid) {
     this.dbid = dbid;
   }
 
@@ -43,11 +43,11 @@ public class RebalanceStatisticsInfo {
     this.totalweight = totalweight == null ? null : totalweight.trim();
   }
 
-  public String getCreatetime() {
+  public Long getCreatetime() {
     return createtime;
   }
 
-  public void setCreatetime(String createtime) {
-    this.createtime = createtime == null ? null : createtime.trim();
+  public void setCreatetime(Long createtime) {
+    this.createtime = createtime == null ? null : createtime;
   }
 }

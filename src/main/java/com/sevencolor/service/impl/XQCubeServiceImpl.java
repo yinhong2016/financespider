@@ -39,309 +39,311 @@ import com.sevencolor.service.XQCubeServiceI;
 @Service("xqCubeService")
 public class XQCubeServiceImpl implements XQCubeServiceI {
 
-  @Autowired
-  private CubeInfoMapper cubeInfoMapper;
-  @Autowired
-  private RebalanceBlockInfoMapper rebalanceBlockInfoMapper;
-  @Autowired
-  private RebalanceStatisticsInfoMapper rebalanceStatisticsInfoMapper;
+	@Autowired
+	private CubeInfoMapper cubeInfoMapper;
+	@Autowired
+	private RebalanceBlockInfoMapper rebalanceBlockInfoMapper;
+	@Autowired
+	private RebalanceStatisticsInfoMapper rebalanceStatisticsInfoMapper;
 
-  /**
-   * @Description: 获取最赚钱雪球组合（沪深按天、月、年排序前十的组合）详细信息
-   * @return: void
-   */
-  public void getTop10ProfHSCubeInfo() {
+	/**
+	 * @Description: 获取最赚钱雪球组合（沪深按天、月、年排序前十的组合）详细信息
+	 * @return: void
+	 */
+	public void getTop10ProfHSCubeInfo() {
 
-    // 清除原有数据
-    truncateCubeInfo();
+		// 清除原有数据
+		truncateCubeInfo();
 
-    // 保存新数据
-    getTop10ProfHSCubeByDay();
-    getTop10ProfHSCubeByMonth();
-    getTop10ProfHSCubeByYear();
+		// 保存新数据
+		getTop10ProfHSCubeByDay();
+		getTop10ProfHSCubeByMonth();
+		getTop10ProfHSCubeByYear();
 
-    // 保存组合在仓weight>200的股票信息
-    saveRebalanceStatistics();
-  }
+		// 保存组合在仓weight>100的股票信息
+		saveRebalanceStatistics();
+	}
 
-  /**
-   * @Description: 保存组合在仓weight>200的股票信息
-   * @return: void
-   */
-  @Transactional
-  private void saveRebalanceStatistics() {
+	/**
+	 * @Description: 保存组合在仓weight>100的股票信息
+	 * @return: void
+	 */
+	@Transactional
+	private void saveRebalanceStatistics() {
 
-    // 汇总统计并保存weight总和>=200以上的股票
-    List<RebalanceStatisticsInfo> rebalanceStatisticsList =
-        rebalanceBlockInfoMapper.selectRebalanceStatistics();
+		// 汇总统计并保存weight总和>=100以上的股票
+		List<RebalanceStatisticsInfo> rebalanceStatisticsList = rebalanceBlockInfoMapper.selectRebalanceStatistics();
 
-    if (rebalanceStatisticsList != null) {
-      // 设置创建时间
-      SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss ");
-      for (RebalanceStatisticsInfo temp : rebalanceStatisticsList) {
-        temp.setCreatetime(sdf.format(new Date()));
-        rebalanceStatisticsInfoMapper.insert(temp);
-      }
-    }
+		if (rebalanceStatisticsList != null) {
+			// 设置创建时间
+			for (RebalanceStatisticsInfo temp : rebalanceStatisticsList) {
+				temp.setCreatetime(new Date().getTime());
+				rebalanceStatisticsInfoMapper.insert(temp);
+			}
+		}
 
-  }
+	}
 
-  /**
-   * @Description: 获取最赚钱雪球组合（沪深按天排序前十的组合）详细信息
-   * @return: void
-   */
-  public void getTop10ProfHSCubeByDay() {
+	/**
+	 * @Description: 获取最赚钱雪球组合（沪深按天排序前十的组合）详细信息
+	 * @return: void
+	 */
+	public void getTop10ProfHSCubeByDay() {
 
-    // 获取沪深股市按天排序最赚钱前十雪球组合
-    MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(
-        MostProfHSCubeCollector.Market.CN, MostProfHSCubeCollector.Order_By.DAILY);
+		// 获取沪深股市按天排序最赚钱前十雪球组合
+		MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(MostProfHSCubeCollector.Market.CN,
+				MostProfHSCubeCollector.Order_By.DAILY);
 
-    // 雪球组合历史前十五股票持仓记录
-    HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();
+		// 雪球组合历史前十五股票持仓记录
+		HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();
 
-    // 获取组合对象
-    List<CubeEntity> cubeList =
-        cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
+		// 获取组合对象
+		List<CubeEntity> cubeList = cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
 
-    // 保存组合信息以及目前组合里面的在仓股票信息
-    saveCubeLastBalances(cubeList);
+		// 保存组合信息以及目前组合里面的在仓股票信息
+		saveCubeLastBalances(cubeList);
 
-  }
+	}
 
-  /**
-   * @Description: 获取最赚钱雪球组合（沪深按月份排序前十的组合）详细信息
-   * @return: void
-   */
-  public void getTop10ProfHSCubeByMonth() {
+	/**
+	 * @Description: 获取最赚钱雪球组合（沪深按月份排序前十的组合）详细信息
+	 * @return: void
+	 */
+	public void getTop10ProfHSCubeByMonth() {
 
-    // 获取沪深股市按月排序最赚钱前十雪球组合
-    MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(
-        MostProfHSCubeCollector.Market.CN, MostProfHSCubeCollector.Order_By.MONTHLY);
+		// 获取沪深股市按月排序最赚钱前十雪球组合
+		MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(MostProfHSCubeCollector.Market.CN,
+				MostProfHSCubeCollector.Order_By.MONTHLY);
 
-    // 雪球组合历史前十五股票持仓记录
-    HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();
+		// 雪球组合历史前十五股票持仓记录
+		HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();
 
-    // 获取组合对象
-    List<CubeEntity> cubeList =
-        cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
+		// 获取组合对象
+		List<CubeEntity> cubeList = cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
 
-    // 保存组合信息以及目前组合里面的在仓股票信息
-    saveCubeLastBalances(cubeList);
+		// 保存组合信息以及目前组合里面的在仓股票信息
+		saveCubeLastBalances(cubeList);
 
-  }
+	}
 
-  /**
-   * @Description: 获取最赚钱雪球组合（沪深按年排序前十的组合）详细信息
-   * @return: void
-   */
-  public void getTop10ProfHSCubeByYear() {
+	/**
+	 * @Description: 获取最赚钱雪球组合（沪深按年排序前十的组合）详细信息
+	 * @return: void
+	 */
+	public void getTop10ProfHSCubeByYear() {
 
-    // 获取沪深股市按月排序最赚钱前十雪球组合
-    MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(
-        MostProfHSCubeCollector.Market.CN, MostProfHSCubeCollector.Order_By.YEARLY);
+		// 获取沪深股市按月排序最赚钱前十雪球组合
+		MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(MostProfHSCubeCollector.Market.CN,
+				MostProfHSCubeCollector.Order_By.YEARLY);
 
-    // 雪球组合历史前十五股票持仓记录
-    HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();
+		// 雪球组合历史前十五股票持仓记录
+		HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();
 
-    // 获取组合对象
-    List<CubeEntity> cubeList =
-        cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
+		// 获取组合对象
+		List<CubeEntity> cubeList = cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
 
-    // 保存组合信息以及目前组合里面的在仓股票信息
-    saveCubeLastBalances(cubeList);
+		// 保存组合信息以及目前组合里面的在仓股票信息
+		saveCubeLastBalances(cubeList);
 
-  }
+	}
 
-  /**
-   * @Description: 保存组合信息以及最新仓位信息
-   * @return: void
-   */
-  private void saveCubeLastBalances(List<CubeEntity> cubeList) {
+	/**
+	 * @Description: 保存组合信息以及最新仓位信息
+	 * @return: void
+	 */
+	private void saveCubeLastBalances(List<CubeEntity> cubeList) {
 
-    for (CubeEntity cube : cubeList) {
+		for (CubeEntity cube : cubeList) {
 
-      // 将网站获取的对象转换为数据库对象方便存储
-      CubeInfo cubeInfo = new CubeInfo();
-      cubeInfo.setCubeid(cube.getCubeID());
-      cubeInfo.setCubename(cube.getName());
-      cubeInfo.setAnnualizedgainrate(cube.getAnnualized_gain_rate());
-      cubeInfo.setCubesymbol(cube.getSymbol());
-      cubeInfo.setDailygain(cube.getDaily_gain());
-      cubeInfo.setMonthlygain(cube.getMonthly_gain());
-      cubeInfo.setTotalgain(cube.getTotal_gain());
-      cubeInfo.setUserid(cube.getUserID());
-      cubeInfo.setUsername(cube.getUserName());
+			// 将网站获取的对象转换为数据库对象方便存储
+			CubeInfo cubeInfo = new CubeInfo();
+			cubeInfo.setCubeid(cube.getCubeID());
+			cubeInfo.setCubename(cube.getName());
+			cubeInfo.setAnnualizedgainrate(cube.getAnnualized_gain_rate());
+			cubeInfo.setCubesymbol(cube.getSymbol());
+			cubeInfo.setDailygain(cube.getDaily_gain());
+			cubeInfo.setMonthlygain(cube.getMonthly_gain());
+			cubeInfo.setTotalgain(cube.getTotal_gain());
+			cubeInfo.setUserid(cube.getUserID());
+			cubeInfo.setUsername(cube.getUserName());
 
-      // 组合所有已经查询出来的历史持仓记录
-      List<RebalanceBlockInfo> rebalanceBlockInfoList = new ArrayList<RebalanceBlockInfo>();
-      if (cube.getRebalancing() != null) {
-        RebalancingEntity rebalancingEntity = cube.getRebalancing();
-        List<RebalancingEntity.TrendBlock> trendEntityList = rebalancingEntity.getHistory();
+			// 组合所有已经查询出来的历史持仓记录
+			List<RebalanceBlockInfo> rebalanceBlockInfoList = new ArrayList<RebalanceBlockInfo>();
+			if (cube.getRebalancing() != null) {
+				RebalancingEntity rebalancingEntity = cube.getRebalancing();
+				List<RebalancingEntity.TrendBlock> trendEntityList = rebalancingEntity.getHistory();
 
-        if (trendEntityList != null) {
-          for (RebalancingEntity.TrendBlock temp : trendEntityList) {
-            RebalanceBlockInfo rebalanceBlockInfo = new RebalanceBlockInfo();
-            rebalanceBlockInfo.setCubeid(cube.getCubeID());
+				if (trendEntityList != null) {
+					for (RebalancingEntity.TrendBlock temp : trendEntityList) {
+						RebalanceBlockInfo rebalanceBlockInfo = new RebalanceBlockInfo();
+						rebalanceBlockInfo.setCubeid(cube.getCubeID());
 
-            // 转换日期
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-            java.util.Date dt = new Date(Long.valueOf(temp.getCreated_at()));
-            String sDateTime = sdf.format(dt);
-            rebalanceBlockInfo.setCreatedtime(sDateTime);
+						// 转换日期
+						SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+						java.util.Date dt = new Date(Long.valueOf(temp.getCreated_at()));
+						String sDateTime = sdf.format(dt);
+						rebalanceBlockInfo.setCreatedtime(sDateTime);
 
-            rebalanceBlockInfo.setCurrentprice(temp.getPrice());
-            rebalanceBlockInfo.setCurrentweight(temp.getWeight());
-            rebalanceBlockInfo.setPrevprice(temp.getPrev_price());
-            rebalanceBlockInfo.setRebalancingid(temp.getRebalancing_id());
-            rebalanceBlockInfo.setStockname(temp.getStock_name());
-            rebalanceBlockInfo.setStocksymbol(temp.getStock_symbol());
-            rebalanceBlockInfo.setTargetweight(temp.getTarget_weight());
-            rebalanceBlockInfo.setPrevweight(temp.getPrev_weight());
-            rebalanceBlockInfoList.add(rebalanceBlockInfo);
-          }
-        }
-      }
+						rebalanceBlockInfo.setCurrentprice(temp.getPrice());
+						rebalanceBlockInfo.setCurrentweight(temp.getWeight());
+						rebalanceBlockInfo.setPrevprice(temp.getPrev_price());
+						rebalanceBlockInfo.setRebalancingid(temp.getRebalancing_id());
+						rebalanceBlockInfo.setStockname(temp.getStock_name());
+						rebalanceBlockInfo.setStocksymbol(temp.getStock_symbol());
+						rebalanceBlockInfo.setTargetweight(temp.getTarget_weight());
+						rebalanceBlockInfo.setPrevweight(temp.getPrev_weight());
+						rebalanceBlockInfoList.add(rebalanceBlockInfo);
+					}
+				}
+			}
 
-      /** 去除已经空仓的股票(取所有涉及股票的最新调仓记录，在该记录集合中留下实际仓位>0的股票) **/
-      // 所有股票代码集合（调仓历史去重，只获得所有涉及股票的编码）
-      Set<String> stockSymbolSet = new HashSet<String>();
-      for (RebalanceBlockInfo temp : rebalanceBlockInfoList) {
-        stockSymbolSet.add(temp.getStocksymbol());
-      }
+			/** 去除已经空仓的股票(取所有涉及股票的最新调仓记录，在该记录集合中留下实际仓位>0的股票) **/
+			// 所有股票代码集合（调仓历史去重，只获得所有涉及股票的编码）
+			Set<String> stockSymbolSet = new HashSet<String>();
+			for (RebalanceBlockInfo temp : rebalanceBlockInfoList) {
+				stockSymbolSet.add(temp.getStocksymbol());
+			}
 
-      // 组合最新调仓股票集合(去重相同编码的股票)
-      List<RebalanceBlockInfo> newBlockInfoList = new ArrayList<RebalanceBlockInfo>();
+			// 组合最新调仓股票集合(去重相同编码的股票)
+			List<RebalanceBlockInfo> newBlockInfoList = new ArrayList<RebalanceBlockInfo>();
 
-      // 取所有涉及股票的最新调仓记录(去重相同编码的股票)
-      for (String stockSymbol : stockSymbolSet) {
+			// 取所有涉及股票的最新调仓记录(去重相同编码的股票)
+			for (String stockSymbol : stockSymbolSet) {
 
-        // 最近时间股票
-        RebalanceBlockInfo newRebalanceBlockInfo = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        for (RebalanceBlockInfo blockInfo : rebalanceBlockInfoList) {
-          if (stockSymbol.equalsIgnoreCase(blockInfo.getStocksymbol())) {
-            if (newRebalanceBlockInfo == null) {
-              newRebalanceBlockInfo = blockInfo;
-            } else {
-              try {
-                long newRebalanceBlockCreateTime =
-                    sdf.parse(newRebalanceBlockInfo.getCreatedtime()).getTime();
-                long blockInfoCreateTime = sdf.parse(blockInfo.getCreatedtime()).getTime();
-                if (newRebalanceBlockCreateTime <= blockInfoCreateTime) {
-                  newRebalanceBlockInfo = blockInfo;
-                }
-              } catch (ParseException e) {
-              }
-            }
-          }
-        }
+				// 最近时间股票
+				RebalanceBlockInfo newRebalanceBlockInfo = null;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				for (RebalanceBlockInfo blockInfo : rebalanceBlockInfoList) {
+					if (stockSymbol.equalsIgnoreCase(blockInfo.getStocksymbol())) {
+						if (newRebalanceBlockInfo == null) {
+							newRebalanceBlockInfo = blockInfo;
+						} else {
+							try {
+								long newRebalanceBlockCreateTime = sdf.parse(newRebalanceBlockInfo.getCreatedtime())
+										.getTime();
+								long blockInfoCreateTime = sdf.parse(blockInfo.getCreatedtime()).getTime();
+								if (newRebalanceBlockCreateTime <= blockInfoCreateTime) {
+									newRebalanceBlockInfo = blockInfo;
+								}
+							} catch (ParseException e) {
+							}
+						}
+					}
+				}
 
-        newBlockInfoList.add(newRebalanceBlockInfo);
-      }
+				newBlockInfoList.add(newRebalanceBlockInfo);
+			}
 
-      // 保留目前仓位不为空的股票
-      // List<RebalanceBlockInfo> lastBlockInfoList = new ArrayList<RebalanceBlockInfo>();
-      // for (RebalanceBlockInfo blockInfo : newBlockInfoList) {
-      // if (!blockInfo.getCurrentweight().equalsIgnoreCase("0.0")) {
-      // lastBlockInfoList.add(blockInfo);
-      // }
-      // }
+			// 保留目前仓位不为空的股票
+			// List<RebalanceBlockInfo> lastBlockInfoList = new
+			// ArrayList<RebalanceBlockInfo>();
+			// for (RebalanceBlockInfo blockInfo : newBlockInfoList) {
+			// if (!blockInfo.getCurrentweight().equalsIgnoreCase("0.0")) {
+			// lastBlockInfoList.add(blockInfo);
+			// }
+			// }
 
-      // 保存组合以及最新仓位信息
-      saveCubeBalancesToDB(cubeInfo, newBlockInfoList);
+			// 保存组合以及最新仓位信息
+			saveCubeBalancesToDB(cubeInfo, newBlockInfoList);
 
-    }
-  }
+		}
+	}
 
-  /**
-   * @Description: 保存数据到数据库
-   * @return: void
-   */
-  @Transactional
-  private void saveCubeBalancesToDB(CubeInfo cubeInfo, List<RebalanceBlockInfo> lastBlockInfoList) {
+	/**
+	 * @Description: 保存数据到数据库
+	 * @return: void
+	 */
+	@Transactional
+	private void saveCubeBalancesToDB(CubeInfo cubeInfo, List<RebalanceBlockInfo> lastBlockInfoList) {
 
-    CubeInfo selectedCube = cubeInfoMapper.selectByCubeSymbol(cubeInfo.getCubesymbol());
+		CubeInfo selectedCube = cubeInfoMapper.selectByCubeSymbol(cubeInfo.getCubesymbol());
 
-    // 如果数据库已经记录Cube，则不再保存
-    if (selectedCube == null) {
-      cubeInfoMapper.insert(cubeInfo);
-      for (RebalanceBlockInfo blockInfo : lastBlockInfoList) {
-        rebalanceBlockInfoMapper.insert(blockInfo);
-      }
-    }
+		// 如果数据库已经记录Cube，则不再保存
+		if (selectedCube == null) {
+			cubeInfoMapper.insert(cubeInfo);
+			for (RebalanceBlockInfo blockInfo : lastBlockInfoList) {
+				rebalanceBlockInfoMapper.insert(blockInfo);
+			}
+		}
 
-  }
+	}
 
-  @Transactional
-  private void truncateCubeInfo() {
-    cubeInfoMapper.truncateCube();
-    rebalanceBlockInfoMapper.truncateRebalance();
-  }
+	@Transactional
+	private void truncateCubeInfo() {
+		cubeInfoMapper.truncateCube();
+		rebalanceBlockInfoMapper.truncateRebalance();
+	}
 
-  /// **
-  // * @Description: 获取最赚钱雪球组合（实盘按月份排序前二十的组合）详细信息
-  // * @return: void
-  // */
-  // public void getTop20ProfActualCubeByMonth() {
-  //
-  // // 获取实盘股市按月排序最赚钱前二十雪球组合
-  // MostProfActualCubeCollector cubeCollector =
-  // new MostProfActualCubeCollector(MostProfActualCubeCollector.Order_By.MONTHLY);
-  //
-  // // 雪球组合历史前十五股票持仓记录
-  // ActualCubeLastBalancingMapper mapper = new ActualCubeLastBalancingMapper();
-  //
-  // // 获取组合对象
-  // List<CubeEntity> cubeList =
-  // cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
-  //
-  // // 保存组合信息以及目前组合里面的在仓股票信息
-  // saveCubeLastBalances(cubeList);
-  //
-  // }
-  //
-  // /**
-  // * @Description: 获取最赚钱雪球组合（实盘按周排序前二十的组合）详细信息
-  // * @return: void
-  // */
-  // public void getTop20ProfActualCubeByWeek() {
-  //
-  // // 获取实盘股市按周排序最赚钱前二十雪球组合
-  // MostProfActualCubeCollector cubeCollector =
-  // new MostProfActualCubeCollector(MostProfActualCubeCollector.Order_By.WEEKLY);
-  //
-  // // 雪球组合历史前十五股票持仓记录
-  // ActualCubeLastBalancingMapper mapper = new ActualCubeLastBalancingMapper();
-  //
-  // // 获取组合对象
-  // List<CubeEntity> cubeList =
-  // cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
-  //
-  // // 保存组合信息以及目前组合里面的在仓股票信息
-  // saveCubeLastBalances(cubeList);
-  //
-  // }
-  //
-  // /**
-  // * @Description: 获取最赚钱雪球组合（实盘按年排序前二十的组合）详细信息
-  // * @return: void
-  // */
-  // public void getTop20ProfActualCubeByYear() {
-  //
-  // // 获取实盘股市按年排序最赚钱前二十雪球组合
-  // MostProfActualCubeCollector cubeCollector =
-  // new MostProfActualCubeCollector(MostProfActualCubeCollector.Order_By.YEARLY);
-  //
-  // // 雪球组合历史前十五股票持仓记录
-  // ActualCubeLastBalancingMapper mapper = new ActualCubeLastBalancingMapper();
-  //
-  // // 获取组合对象
-  // List<CubeEntity> cubeList =
-  // cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
-  //
-  // // 保存组合信息以及目前组合里面的在仓股票信息
-  // saveCubeLastBalances(cubeList);
-  //
-  // }
+	/// **
+	// * @Description: 获取最赚钱雪球组合（实盘按月份排序前二十的组合）详细信息
+	// * @return: void
+	// */
+	// public void getTop20ProfActualCubeByMonth() {
+	//
+	// // 获取实盘股市按月排序最赚钱前二十雪球组合
+	// MostProfActualCubeCollector cubeCollector =
+	// new
+	/// MostProfActualCubeCollector(MostProfActualCubeCollector.Order_By.MONTHLY);
+	//
+	// // 雪球组合历史前十五股票持仓记录
+	// ActualCubeLastBalancingMapper mapper = new
+	/// ActualCubeLastBalancingMapper();
+	//
+	// // 获取组合对象
+	// List<CubeEntity> cubeList =
+	// cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
+	//
+	// // 保存组合信息以及目前组合里面的在仓股票信息
+	// saveCubeLastBalances(cubeList);
+	//
+	// }
+	//
+	// /**
+	// * @Description: 获取最赚钱雪球组合（实盘按周排序前二十的组合）详细信息
+	// * @return: void
+	// */
+	// public void getTop20ProfActualCubeByWeek() {
+	//
+	// // 获取实盘股市按周排序最赚钱前二十雪球组合
+	// MostProfActualCubeCollector cubeCollector =
+	// new
+	/// MostProfActualCubeCollector(MostProfActualCubeCollector.Order_By.WEEKLY);
+	//
+	// // 雪球组合历史前十五股票持仓记录
+	// ActualCubeLastBalancingMapper mapper = new
+	/// ActualCubeLastBalancingMapper();
+	//
+	// // 获取组合对象
+	// List<CubeEntity> cubeList =
+	// cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
+	//
+	// // 保存组合信息以及目前组合里面的在仓股票信息
+	// saveCubeLastBalances(cubeList);
+	//
+	// }
+	//
+	// /**
+	// * @Description: 获取最赚钱雪球组合（实盘按年排序前二十的组合）详细信息
+	// * @return: void
+	// */
+	// public void getTop20ProfActualCubeByYear() {
+	//
+	// // 获取实盘股市按年排序最赚钱前二十雪球组合
+	// MostProfActualCubeCollector cubeCollector =
+	// new
+	/// MostProfActualCubeCollector(MostProfActualCubeCollector.Order_By.YEARLY);
+	//
+	// // 雪球组合历史前十五股票持仓记录
+	// ActualCubeLastBalancingMapper mapper = new
+	/// ActualCubeLastBalancingMapper();
+	//
+	// // 获取组合对象
+	// List<CubeEntity> cubeList =
+	// cubeCollector.get().parallelStream().map(mapper).collect(Collectors.toList());
+	//
+	// // 保存组合信息以及目前组合里面的在仓股票信息
+	// saveCubeLastBalances(cubeList);
+	//
+	// }
 
 }

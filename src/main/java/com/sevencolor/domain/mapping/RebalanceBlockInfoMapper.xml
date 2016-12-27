@@ -197,6 +197,6 @@
 		stockSymbol,stockName,sum(currentWeight) as totalWeight
 		from
 		rebalanceblock
-		group by stockSymbol having totalWeight >= 200
+		group by stockSymbol having totalWeight >= 100
 	</select>
 </mapper>
