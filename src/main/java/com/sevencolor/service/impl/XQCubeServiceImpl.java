@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -268,10 +269,18 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 
 	}
 
+	@SuppressWarnings("static-access")
 	@Transactional
 	private void truncateCubeInfo() {
 		cubeInfoMapper.truncateCube();
 		rebalanceBlockInfoMapper.truncateRebalance();
+		// 只保留当天最后一次存入数据
+		Date date = new Date();
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		Date date2 = new Date(date.getTime() - gc.get(gc.HOUR_OF_DAY) * 60 * 60 * 1000 - gc.get(gc.MINUTE) * 60 * 1000
+				- gc.get(gc.SECOND) * 1000);
+		rebalanceStatisticsInfoMapper.deleteByCreateTime(date2.getTime());
 	}
 
 	/// **

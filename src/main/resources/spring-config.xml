@@ -89,19 +89,16 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 		</property>
 	</bean>
 
-	<!-- 定义定时任务触发时间(1个小时触发一次) -->
-	<bean id="doTimeForToken"
-		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-		<property name="jobDetail">
-			<ref bean="jobtaskForToken" />
-		</property>
-		<property name="repeatInterval">
-			<value>3600000</value>
-		</property>
-		<property name="startDelay">
-			<value>2000</value>
-		</property>
+	<!-- 定义定时任务触发时间 -->
+	<bean id="doTimeForToken" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="jobtaskForToken"></property>
+		<property name="cronExpression" value="0 0/30 8-22 ? * MON-FRI"></property>
 	</bean>
+
+	<!-- 定义定时任务触发时间(1个小时触发一次) <bean id="doTimeForToken" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean"> 
+		<property name="jobDetail"> <ref bean="jobtaskForToken" /> </property> <property 
+		name="repeatInterval"> <value>3600000</value> </property> <property name="startDelay"> 
+		<value>2000</value> </property> </bean> -->
 
 	<!-- 任务总管理类 -->
 	<bean id="startQuertz" lazy-init="false" autowire="no"

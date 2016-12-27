@@ -4,6 +4,8 @@ import com.sevencolor.domain.pojo.RebalanceStatisticsInfo;
 
 public interface RebalanceStatisticsInfoMapper {
   int deleteByPrimaryKey(Long dbid);
+  
+  int deleteByCreateTime(Long createtime);
 
   int insert(RebalanceStatisticsInfo record);
 

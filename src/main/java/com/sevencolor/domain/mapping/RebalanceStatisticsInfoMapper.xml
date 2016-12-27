@@ -24,6 +24,11 @@
 		rebalancestatistics
 		where dbID = #{dbid,jdbcType=BIGINT}
 	</delete>
+	<delete id="deleteByCreateTime" parameterType="java.lang.Long">
+		delete from
+		rebalancestatistics
+		where createTime >= #{createtime,jdbcType=BIGINT}
+	</delete>
 	<insert id="insert" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
 		insert into rebalancestatistics
