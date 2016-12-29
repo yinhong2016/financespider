@@ -227,15 +227,16 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 		List<CubeRebalanceStatisticsInfo> yearlyCubeRebList = xqSummeryCubeDao
 				.selectYearlyCubeRebalanceStatistics(dBefore.getTime());
 
-		// 获取重复的股票信息
-		CubeRebalanceStatisticsInfo temp = null;
+		// 获取重复的股票信息,并将Weight相加
 		List<CubeRebalanceStatisticsInfo> result = new ArrayList<CubeRebalanceStatisticsInfo>();
 		if (monthlyCubeRebList != null && yearlyCubeRebList != null && monthlyCubeRebList.size() > 0
 				&& yearlyCubeRebList.size() > 0) {
 			for (CubeRebalanceStatisticsInfo monthly : monthlyCubeRebList) {
-				temp = monthly;
 				for (CubeRebalanceStatisticsInfo yearly : yearlyCubeRebList) {
-					if (temp.getStocksymbol().equalsIgnoreCase(yearly.getStocksymbol())) {
+					if (monthly.getStocksymbol().equalsIgnoreCase(yearly.getStocksymbol())) {
+						double monthlyWeight = Double.parseDouble(monthly.getTotalweight());
+						double yearlyWeight = Double.parseDouble(yearly.getTotalweight());
+						yearly.setTotalweight(Double.toString(monthlyWeight + yearlyWeight));
 						result.add(yearly);
 					}
 				}
@@ -244,7 +245,7 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 
 		// 保存数据库
 		for (CubeRebalanceStatisticsInfo insertObeject : result) {
-			xqSummeryCubeDao.insert(insertObeject);
+			xqSummeryCubeDao.insertSelective(insertObeject);
 		}
 	}
 

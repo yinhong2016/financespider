@@ -19,24 +19,27 @@
 	</select>
 	<select id="selectYearlyCubeRebalanceStatistics" resultMap="BaseResultMap"
 		parameterType="java.lang.Long">
-		select distinct
-		<include refid="Base_Column_List" />
-		from xq_yearly_cube_rebalance_statistics where createTime >=
-		#{createtime,jdbcType=BIGINT}
+		select stockSymbol, stockName, sum(totalWeight) as
+		totalWeight
+		from xq_yearly_cube_rebalance_statistics where createTime
+		>=
+		#{createtime,jdbcType=BIGINT} group by stockSymbol
 	</select>
 	<select id="selectMonthlyCubeRebalanceStatistics" resultMap="BaseResultMap"
 		parameterType="java.lang.Long">
-		select distinct
-		<include refid="Base_Column_List" />
-		from xq_monthly_cube_rebalance_statistics where createTime >=
-		#{createtime,jdbcType=BIGINT}
+		select stockSymbol, stockName, sum(totalWeight) as
+		totalWeight
+		from xq_monthly_cube_rebalance_statistics where createTime
+		>=
+		#{createtime,jdbcType=BIGINT} group by stockSymbol
 	</select>
 	<select id="selectDailyCubeRebalanceStatistics" resultMap="BaseResultMap"
 		parameterType="java.lang.Long">
-		select distinct
-		<include refid="Base_Column_List" />
-		from xq_daily_cube_rebalance_statistics where createTime >=
-		#{createtime,jdbcType=BIGINT}
+		select stockSymbol, stockName, sum(totalWeight) as
+		totalWeight
+		from xq_daily_cube_rebalance_statistics where createTime
+		>=
+		#{createtime,jdbcType=BIGINT} group by stockSymbol
 	</select>
 	<insert id="insert"
 		parameterType="com.sevencolor.domain.pojo.CubeRebalanceStatisticsInfo"
