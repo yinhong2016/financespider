@@ -19,14 +19,20 @@
 	</settings>
 	<typeAliases>
 		<typeAlias alias="CubeInfo" type="com.sevencolor.domain.pojo.CubeInfo" />
-		<typeAlias alias="RebalanceBlockInfo" type="com.sevencolor.domain.pojo.RebalanceBlockInfo" />
-		<typeAlias alias="StockInfo" type="com.sevencolor.domain.pojo.StockInfo" />
-		<typeAlias alias="RebalanceStatisticsInfo" type="com.sevencolor.domain.pojo.RebalanceStatisticsInfo" />
+		<typeAlias alias="CubeRebalanceInfo"
+			type="com.sevencolor.domain.pojo.CubeRebalanceInfo" />
+		<typeAlias alias="CubeRebalanceStatisticsInfo"
+			type="com.sevencolor.domain.pojo.CubeRebalanceStatisticsInfo" />
 	</typeAliases>
 	<mappers>
-		<mapper resource="com/sevencolor/domain/mapping/CubeInfoMapper.xml" />
-		<mapper resource="com/sevencolor/domain/mapping/RebalanceBlockInfoMapper.xml" />
-		<mapper resource="com/sevencolor/domain/mapping/StockInfoMapper.xml" />
-		<mapper resource="com/sevencolor/domain/mapping/RebalanceStatisticsInfoMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQDailyCubeMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQDailyCubeRebMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQDailyCubeRebStatMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQMonthlyCubeMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQMonthlyCubeRebMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQMonthlyCubeRebStatMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQYearlyCubeMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQYearlyCubeRebMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQYearlyCubeRebStatMapper.xml" />
 	</mappers>
 </configuration>

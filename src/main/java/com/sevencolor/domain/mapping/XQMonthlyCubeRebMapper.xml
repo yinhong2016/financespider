@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sevencolor.domain.dao.RebalanceBlockInfoMapper">
-	<resultMap id="BaseResultMap" type="com.sevencolor.domain.pojo.RebalanceBlockInfo">
-		<id column="dbID" property="dbid" jdbcType="INTEGER" />
+<mapper namespace="com.sevencolor.domain.dao.XQMonthlyCubeRebDao">
+	<resultMap id="BaseResultMap" type="com.sevencolor.domain.pojo.CubeRebalanceInfo">
+		<id column="dbID" property="dbid" jdbcType="BIGINT" />
 		<result column="cubeID" property="cubeid" jdbcType="VARCHAR" />
 		<result column="stockName" property="stockname" jdbcType="VARCHAR" />
 		<result column="stockSymbol" property="stocksymbol" jdbcType="VARCHAR" />
@@ -17,7 +17,7 @@
 			jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="RebalanceStatisticsMap"
-		type="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
+		type="com.sevencolor.domain.pojo.CubeRebalanceStatisticsInfo">
 		<result column="stockSymbol" property="stocksymbol" jdbcType="VARCHAR" />
 		<result column="stockName" property="stockname" jdbcType="VARCHAR" />
 		<result column="totalWeight" property="totalweight" jdbcType="VARCHAR" />
@@ -30,25 +30,28 @@
 		rebalancingID
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
+		parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
-		from rebalanceblock
-		where dbID = #{dbid,jdbcType=INTEGER}
+		from xq_monthly_cube_rebalance
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
 		rebalanceblock
-		where dbID = #{dbid,jdbcType=INTEGER}
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</delete>
-	<insert id="insert" parameterType="com.sevencolor.domain.pojo.RebalanceBlockInfo"
+	<insert id="insert" parameterType="com.sevencolor.domain.pojo.CubeRebalanceInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
-		insert into rebalanceblock
+		insert into
+		xq_monthly_cube_rebalance
 		(cubeID, stockName,
-		stockSymbol, createdTime, prevPrice,
+		stockSymbol, createdTime,
+		prevPrice,
 		currentPrice,
 		prevWeight, targetWeight,
-		currentWeight, rebalancingID)
+		currentWeight,
+		rebalancingID)
 		values
 		(#{cubeid,jdbcType=VARCHAR},
 		#{stockname,jdbcType=VARCHAR},
@@ -61,9 +64,9 @@
 		#{currentweight,jdbcType=VARCHAR},
 		#{rebalancingid,jdbcType=VARCHAR})
 	</insert>
-	<insert id="insertSelective" parameterType="com.sevencolor.domain.pojo.RebalanceBlockInfo"
+	<insert id="insertSelective" parameterType="com.sevencolor.domain.pojo.CubeRebalanceInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
-		insert into rebalanceblock
+		insert into xq_monthly_cube_rebalance
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="cubeid != null">
 				cubeID,
@@ -129,8 +132,8 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.sevencolor.domain.pojo.RebalanceBlockInfo">
-		update rebalanceblock
+	<update id="updateByPrimaryKeySelective" parameterType="com.sevencolor.domain.pojo.CubeRebalanceInfo">
+		update xq_monthly_cube_rebalance
 		<set>
 			<if test="cubeid != null">
 				cubeID = #{cubeid,jdbcType=VARCHAR},
@@ -163,11 +166,11 @@
 				rebalancingID = #{rebalancingid,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where dbID = #{dbid,jdbcType=INTEGER}
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.sevencolor.domain.pojo.RebalanceBlockInfo">
+	<update id="updateByPrimaryKey" parameterType="com.sevencolor.domain.pojo.CubeRebalanceInfo">
 		update
-		rebalanceblock
+		xq_monthly_cube_rebalance
 		set cubeID = #{cubeid,jdbcType=VARCHAR},
 		stockName =
 		#{stockname,jdbcType=VARCHAR},
@@ -187,16 +190,17 @@
 		#{currentweight,jdbcType=VARCHAR},
 		rebalancingID =
 		#{rebalancingid,jdbcType=VARCHAR}
-		where dbID = #{dbid,jdbcType=INTEGER}
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</update>
 	<select id="truncateRebalance">
-		truncate table rebalanceblock
+		truncate table xq_monthly_cube_rebalance
 	</select>
 	<select id="selectRebalanceStatistics" resultMap="RebalanceStatisticsMap">
 		select
 		stockSymbol,stockName,sum(currentWeight) as totalWeight
 		from
-		rebalanceblock
-		group by stockSymbol having totalWeight >= 100
+		xq_monthly_cube_rebalance
+		group by stockSymbol having totalWeight >=
+		100
 	</select>
 </mapper>

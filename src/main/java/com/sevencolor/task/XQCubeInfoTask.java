@@ -19,15 +19,18 @@ import com.sevencolor.service.XQCubeServiceI;
 @Component
 public class XQCubeInfoTask {
 
-  @Autowired
-  private XQCubeServiceI xqCubeService;
+	@Autowired
+	private XQCubeServiceI xqCubeService;
 
-  /**
-   * @Description: 获取最赚钱雪球组合详细信息
-   * @return: void
-   */
-  public void mostProfitableCubeDetail() {
-    xqCubeService.getTop10ProfHSCubeInfo();
-  }
+	/**
+	 * @Description: 获取最赚钱雪球组合详细信息
+	 * @return: void
+	 */
+	public void mostProfitableCubeDetail() {
+		// xqCubeService.getTop10ProfHSCubeInfo();
+		xqCubeService.getTop10ProfHSCubeByDay();
+		xqCubeService.getTop10ProfHSCubeByMonth();
+		xqCubeService.getTop10ProfHSCubeByYear();
+	}
 
 }

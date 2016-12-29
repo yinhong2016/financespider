@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sevencolor.domain.dao.CubeInfoMapper">
+<mapper namespace="com.sevencolor.domain.dao.XQMonthlyCubeDao">
 	<resultMap id="BaseResultMap" type="com.sevencolor.domain.pojo.CubeInfo">
-		<id column="dbID" property="dbid" jdbcType="INTEGER" />
+		<id column="dbID" property="dbid" jdbcType="BIGINT" />
 		<result column="cubeID" property="cubeid" jdbcType="VARCHAR" />
 		<result column="cubeName" property="cubename" jdbcType="VARCHAR" />
 		<result column="cubeSymbol" property="cubesymbol" jdbcType="VARCHAR" />
@@ -19,40 +19,44 @@
 		annualizedGainRate, totalGain,userID,userName
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
+		parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
-		from cube
-		where dbID = #{dbid,jdbcType=INTEGER}
+		from xq_monthly_cube
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</select>
 	<select id="selectByCubeSymbol" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
-		from cube
+		from xq_monthly_cube
 		where cubeSymbol = #{cubeSymbol,jdbcType=VARCHAR}
 	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from cube
-		where dbID = #{dbid,jdbcType=INTEGER}
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		xq_monthly_cube
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</delete>
 	<insert id="insert" parameterType="com.sevencolor.domain.pojo.CubeInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
-		insert into cube (cubeID,
+		insert into xq_monthly_cube
+		(cubeID,
 		cubeName,
 		cubeSymbol, dailyGain, monthlyGain,
 		annualizedGainRate,
 		totalGain,userID,userName)
-		values (#{cubeid,jdbcType=VARCHAR},
+		values
+		(#{cubeid,jdbcType=VARCHAR},
 		#{cubename,jdbcType=VARCHAR},
 		#{cubesymbol,jdbcType=VARCHAR},
-		#{dailygain,jdbcType=VARCHAR}, #{monthlygain,jdbcType=VARCHAR},
+		#{dailygain,jdbcType=VARCHAR},
+		#{monthlygain,jdbcType=VARCHAR},
 		#{annualizedgainrate,jdbcType=VARCHAR}, #{totalgain,jdbcType=VARCHAR},
 		#{userid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.sevencolor.domain.pojo.CubeInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
-		insert into cube
+		insert into xq_monthly_cube
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="cubeid != null">
 				cubeID,
@@ -113,7 +117,7 @@
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.sevencolor.domain.pojo.CubeInfo">
-		update cube
+		update xq_monthly_cube
 		<set>
 			<if test="cubeid != null">
 				cubeID = #{cubeid,jdbcType=VARCHAR},
@@ -144,10 +148,11 @@
 				userName = #{username,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where dbID = #{dbid,jdbcType=INTEGER}
+		where dbID = #{dbid,jdbcType=BIGINT}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="com.sevencolor.domain.pojo.CubeInfo">
-		update cube
+		update
+		xq_monthly_cube
 		set
 		cubeID = #{cubeid,jdbcType=VARCHAR},
 		cubeName =
@@ -167,9 +172,9 @@
 		userName =
 		#{username,jdbcType=VARCHAR}
 		where dbID =
-		#{dbid,jdbcType=INTEGER}
+		#{dbid,jdbcType=BIGINT}
 	</update>
 	<select id="truncateCube">
-		truncate table cube
+		truncate table xq_monthly_cube
 	</select>
 </mapper>

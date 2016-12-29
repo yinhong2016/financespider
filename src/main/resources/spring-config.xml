@@ -22,7 +22,8 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	<!--配置数据源 -->
 	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
-		<property name="url" value="jdbc:mysql://7colorworld.com:3306/financespider" />
+		<property name="url"
+			value="jdbc:mysql://7colorworld.com:3306/financespider" />
 		<property name="username" value="root" />
 		<property name="password" value="Terry2008" />
 		<!-- 初始化连接大小 -->
@@ -90,7 +91,8 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	</bean>
 
 	<!-- 定义定时任务触发时间 -->
-	<bean id="doTimeForToken" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="doTimeForToken"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="jobtaskForToken"></property>
 		<property name="cronExpression" value="0 0/30 8-22 ? * MON-FRI"></property>
 	</bean>

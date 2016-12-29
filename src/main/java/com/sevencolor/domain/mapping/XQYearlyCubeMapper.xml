@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sevencolor.domain.dao.XQYearlyCubeDao">
+	<resultMap id="BaseResultMap" type="com.sevencolor.domain.pojo.CubeInfo">
+		<id column="dbID" property="dbid" jdbcType="BIGINT" />
+		<result column="cubeID" property="cubeid" jdbcType="VARCHAR" />
+		<result column="cubeName" property="cubename" jdbcType="VARCHAR" />
+		<result column="cubeSymbol" property="cubesymbol" jdbcType="VARCHAR" />
+		<result column="dailyGain" property="dailygain" jdbcType="VARCHAR" />
+		<result column="monthlyGain" property="monthlygain" jdbcType="VARCHAR" />
+		<result column="annualizedGainRate" property="annualizedgainrate"
+			jdbcType="VARCHAR" />
+		<result column="totalGain" property="totalgain" jdbcType="VARCHAR" />
+		<result column="userID" property="userid" jdbcType="VARCHAR" />
+		<result column="userName" property="username" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		dbID, cubeID, cubeName, cubeSymbol, dailyGain, monthlyGain,
+		annualizedGainRate, totalGain,userID,userName
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from xq_yearly_cube
+		where dbID = #{dbid,jdbcType=BIGINT}
+	</select>
+	<select id="selectByCubeSymbol" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from xq_yearly_cube
+		where cubeSymbol = #{cubeSymbol,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		xq_yearly_cube
+		where dbID = #{dbid,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.sevencolor.domain.pojo.CubeInfo"
+		useGeneratedKeys="true" keyProperty="dbid">
+		insert into xq_yearly_cube
+		(cubeID,
+		cubeName,
+		cubeSymbol, dailyGain, monthlyGain,
+		annualizedGainRate,
+		totalGain,userID,userName)
+		values
+		(#{cubeid,jdbcType=VARCHAR},
+		#{cubename,jdbcType=VARCHAR},
+		#{cubesymbol,jdbcType=VARCHAR},
+		#{dailygain,jdbcType=VARCHAR},
+		#{monthlygain,jdbcType=VARCHAR},
+		#{annualizedgainrate,jdbcType=VARCHAR}, #{totalgain,jdbcType=VARCHAR},
+		#{userid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.sevencolor.domain.pojo.CubeInfo"
+		useGeneratedKeys="true" keyProperty="dbid">
+		insert into xq_yearly_cube
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cubeid != null">
+				cubeID,
+			</if>
+			<if test="cubename != null">
+				cubeName,
+			</if>
+			<if test="cubesymbol != null">
+				cubeSymbol,
+			</if>
+			<if test="dailygain != null">
+				dailyGain,
+			</if>
+			<if test="monthlygain != null">
+				monthlyGain,
+			</if>
+			<if test="annualizedgainrate != null">
+				annualizedGainRate,
+			</if>
+			<if test="totalgain != null">
+				totalGain,
+			</if>
+			<if test="userid != null">
+				userID,
+			</if>
+			<if test="username != null">
+				userName,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cubeid != null">
+				#{cubeid,jdbcType=VARCHAR},
+			</if>
+			<if test="cubename != null">
+				#{cubename,jdbcType=VARCHAR},
+			</if>
+			<if test="cubesymbol != null">
+				#{cubesymbol,jdbcType=VARCHAR},
+			</if>
+			<if test="dailygain != null">
+				#{dailygain,jdbcType=VARCHAR},
+			</if>
+			<if test="monthlygain != null">
+				#{monthlygain,jdbcType=VARCHAR},
+			</if>
+			<if test="annualizedgainrate != null">
+				#{annualizedgainrate,jdbcType=VARCHAR},
+			</if>
+			<if test="totalgain != null">
+				#{totalgain,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.sevencolor.domain.pojo.CubeInfo">
+		update xq_yearly_cube
+		<set>
+			<if test="cubeid != null">
+				cubeID = #{cubeid,jdbcType=VARCHAR},
+			</if>
+			<if test="cubename != null">
+				cubeName = #{cubename,jdbcType=VARCHAR},
+			</if>
+			<if test="cubesymbol != null">
+				cubeSymbol = #{cubesymbol,jdbcType=VARCHAR},
+			</if>
+			<if test="dailygain != null">
+				dailyGain = #{dailygain,jdbcType=VARCHAR},
+			</if>
+			<if test="monthlygain != null">
+				monthlyGain = #{monthlygain,jdbcType=VARCHAR},
+			</if>
+			<if test="annualizedgainrate != null">
+				annualizedGainRate =
+				#{annualizedgainrate,jdbcType=VARCHAR},
+			</if>
+			<if test="totalgain != null">
+				totalGain = #{totalgain,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				userID = #{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				userName = #{username,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where dbID = #{dbid,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.sevencolor.domain.pojo.CubeInfo">
+		update
+		xq_yearly_cube
+		set
+		cubeID = #{cubeid,jdbcType=VARCHAR},
+		cubeName =
+		#{cubename,jdbcType=VARCHAR},
+		cubeSymbol =
+		#{cubesymbol,jdbcType=VARCHAR},
+		dailyGain =
+		#{dailygain,jdbcType=VARCHAR},
+		monthlyGain =
+		#{monthlygain,jdbcType=VARCHAR},
+		annualizedGainRate =
+		#{annualizedgainrate,jdbcType=VARCHAR},
+		totalGain =
+		#{totalgain,jdbcType=VARCHAR},
+		userID =
+		#{userid,jdbcType=VARCHAR},
+		userName =
+		#{username,jdbcType=VARCHAR}
+		where dbID =
+		#{dbid,jdbcType=BIGINT}
+	</update>
+	<select id="truncateCube">
+		truncate table xq_yearly_cube
+	</select>
+</mapper>

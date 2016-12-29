@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sevencolor.domain.dao.RebalanceStatisticsInfoMapper">
+<mapper namespace="com.sevencolor.domain.dao.XQDailyCubeRebStatDao">
 	<resultMap id="BaseResultMap"
-		type="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
+		type="com.sevencolor.domain.pojo.CubeRebalanceStatisticsInfo">
 		<id column="dbID" property="dbid" jdbcType="BIGINT" />
 		<result column="stockSymbol" property="stocksymbol" jdbcType="VARCHAR" />
 		<result column="stockName" property="stockname" jdbcType="VARCHAR" />
@@ -16,22 +16,26 @@
 		parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
-		from rebalancestatistics
-		where dbID = #{dbid,jdbcType=BIGINT}
+		from xq_daily_cube_rebalance_statistics
+		where dbID =
+		#{dbid,jdbcType=BIGINT}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
-		rebalancestatistics
+		xq_daily_cube_rebalance_statistics
 		where dbID = #{dbid,jdbcType=BIGINT}
 	</delete>
 	<delete id="deleteByCreateTime" parameterType="java.lang.Long">
 		delete from
-		rebalancestatistics
-		where createTime >= #{createtime,jdbcType=BIGINT}
+		xq_daily_cube_rebalance_statistics
+		where createTime >=
+		#{createtime,jdbcType=BIGINT}
 	</delete>
-	<insert id="insert" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo"
+	<insert id="insert"
+		parameterType="com.sevencolor.domain.pojo.CubeRebalanceStatisticsInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
-		insert into rebalancestatistics
+		insert into
+		xq_daily_cube_rebalance_statistics
 		(stockSymbol, stockName,
 		totalWeight, createTime)
 		values
@@ -40,9 +44,10 @@
 		#{totalweight,jdbcType=VARCHAR},
 		#{createtime,jdbcType=BIGINT})
 	</insert>
-	<insert id="insertSelective" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo"
+	<insert id="insertSelective"
+		parameterType="com.sevencolor.domain.pojo.CubeRebalanceStatisticsInfo"
 		useGeneratedKeys="true" keyProperty="dbid">
-		insert into rebalancestatistics
+		insert into xq_daily_cube_rebalance_statistics
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="stocksymbol != null">
 				stockSymbol,
@@ -72,8 +77,9 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
-		update rebalancestatistics
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.sevencolor.domain.pojo.CubeRebalanceStatisticsInfo">
+		update xq_daily_cube_rebalance_statistics
 		<set>
 			<if test="stocksymbol != null">
 				stockSymbol = #{stocksymbol,jdbcType=VARCHAR},
@@ -90,11 +96,15 @@
 		</set>
 		where dbID = #{dbid,jdbcType=BIGINT}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.sevencolor.domain.pojo.RebalanceStatisticsInfo">
+	<update id="updateByPrimaryKey"
+		parameterType="com.sevencolor.domain.pojo.CubeRebalanceStatisticsInfo">
 		update
-		rebalancestatistics
-		set stockSymbol = #{stocksymbol,jdbcType=VARCHAR},
-		stockName = #{stockname,jdbcType=VARCHAR},
+		xq_daily_cube_rebalance_statistics
+		set stockSymbol
+		=
+		#{stocksymbol,jdbcType=VARCHAR},
+		stockName =
+		#{stockname,jdbcType=VARCHAR},
 		totalWeight =
 		#{totalweight,jdbcType=VARCHAR},
 		createTime =

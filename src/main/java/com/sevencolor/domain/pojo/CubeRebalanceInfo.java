@@ -3,7 +3,7 @@ package com.sevencolor.domain.pojo;
 /**
  * @Description: 组合持仓股票
  */
-public class RebalanceBlockInfo {
+public class CubeRebalanceInfo {
   private Integer dbid;
 
   private String cubeid;
