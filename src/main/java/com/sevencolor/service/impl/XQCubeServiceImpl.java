@@ -80,7 +80,6 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 		getTop10ProfHSCubeByDay();
 		getTop10ProfHSCubeByMonth();
 		getTop10ProfHSCubeByYear();
-
 		calXQCommCubeRebStat();
 	}
 

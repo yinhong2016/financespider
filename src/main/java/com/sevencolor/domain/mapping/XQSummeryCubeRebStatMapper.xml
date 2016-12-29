@@ -12,6 +12,7 @@
 	<sql id="Base_Column_List">
 		dbID, stockSymbol, stockName, totalWeight, createTime
 	</sql>
+	
 	<select id="selectSummeryCubeRebalanceStatistics" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
