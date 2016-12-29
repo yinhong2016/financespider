@@ -201,6 +201,6 @@
 		from
 		xq_monthly_cube_rebalance
 		group by stockSymbol having totalWeight >=
-		100
+		10
 	</select>
 </mapper>

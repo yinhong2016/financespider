@@ -11,6 +11,7 @@ package com.sevencolor.service.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import com.sevencolor.domain.dao.XQDailyCubeRebStatDao;
 import com.sevencolor.domain.dao.XQMonthlyCubeDao;
 import com.sevencolor.domain.dao.XQMonthlyCubeRebDao;
 import com.sevencolor.domain.dao.XQMonthlyCubeRebStatDao;
+import com.sevencolor.domain.dao.XQSummeryCubeDao;
 import com.sevencolor.domain.dao.XQYearlyCubeDao;
 import com.sevencolor.domain.dao.XQYearlyCubeRebDao;
 import com.sevencolor.domain.dao.XQYearlyCubeRebStatDao;
@@ -67,6 +69,9 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 	@Autowired
 	private XQMonthlyCubeRebStatDao xqMonthlyCubeRebStatDao;
 
+	@Autowired
+	private XQSummeryCubeDao xqSummeryCubeDao;
+
 	/**
 	 * @Description: 获取最赚钱雪球组合（沪深按天、月、年排序前十的组合）详细信息
 	 * @return: void
@@ -75,6 +80,8 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 		getTop10ProfHSCubeByDay();
 		getTop10ProfHSCubeByMonth();
 		getTop10ProfHSCubeByYear();
+
+		calXQCommCubeRebStat();
 	}
 
 	/**
@@ -112,7 +119,7 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 			saveXQDailyCubeRebalanceToDB(cubeInfo, notNullCubeRebalanceList);
 		}
 
-		// 统计组合在仓weight>100的股票信息
+		// 统计组合在仓weight>50的股票信息
 		saveXqDailyCubeRebStat();
 
 	}
@@ -152,7 +159,7 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 			saveXQMonthlyCubeRebalanceToDB(cubeInfo, notNullCubeRebalanceList);
 		}
 
-		// 统计组合在仓weight>100的股票信息
+		// 统计组合在仓weight>10的股票信息
 		saveXqMonthlyCubeRebStat();
 
 	}
@@ -192,9 +199,53 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 			saveXQYearlyCubeRebalanceToDB(cubeInfo, notNullCubeRebalanceList);
 		}
 
-		// 统计组合在仓weight>100的股票信息
+		// 统计组合在仓weight>10的股票信息
 		saveXqYearlyCubeRebStat();
 
+	}
+
+	/**
+	 * 
+	 * @Description: 将年收益和月收益排名靠前的组合的股票信息汇总，取出一周内共同的股票并保存入库
+	 * @return: void
+	 */
+	@Transactional
+	public void calXQCommCubeRebStat() {
+
+		xqSummeryCubeDao.truncateSummeryCubeRebalanceStatistics();
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		// 设置为前一周
+		calendar.add(Calendar.DAY_OF_MONTH, -7);
+		// 得到前一周某一天的时间
+		Date dBefore = calendar.getTime();
+
+		// 查询一周前年收益和月收益靠前的组合涉及的股票（已经经过统计）集合
+		List<CubeRebalanceStatisticsInfo> monthlyCubeRebList = xqSummeryCubeDao
+				.selectMonthlyCubeRebalanceStatistics(dBefore.getTime());
+		List<CubeRebalanceStatisticsInfo> yearlyCubeRebList = xqSummeryCubeDao
+				.selectYearlyCubeRebalanceStatistics(dBefore.getTime());
+
+		// 获取重复的股票信息
+		CubeRebalanceStatisticsInfo temp = null;
+		List<CubeRebalanceStatisticsInfo> result = new ArrayList<CubeRebalanceStatisticsInfo>();
+		if (monthlyCubeRebList != null && yearlyCubeRebList != null && monthlyCubeRebList.size() > 0
+				&& yearlyCubeRebList.size() > 0) {
+			for (CubeRebalanceStatisticsInfo monthly : monthlyCubeRebList) {
+				temp = monthly;
+				for (CubeRebalanceStatisticsInfo yearly : yearlyCubeRebList) {
+					if (temp.getStocksymbol().equalsIgnoreCase(yearly.getStocksymbol())) {
+						result.add(yearly);
+					}
+				}
+			}
+		}
+
+		// 保存数据库
+		for (CubeRebalanceStatisticsInfo insertObeject : result) {
+			xqSummeryCubeDao.insert(insertObeject);
+		}
 	}
 
 	@Transactional
@@ -327,7 +378,7 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 
 	@Transactional
 	private void saveXqDailyCubeRebStat() {
-		// 汇总统计并保存weight总和>=100以上的股票
+		// 汇总统计并保存weight总和>=50以上的股票
 		List<CubeRebalanceStatisticsInfo> rebalanceStatisticsList = xqDailyCubeRebalanceDao.selectRebalanceStatistics();
 
 		if (rebalanceStatisticsList != null) {
@@ -341,7 +392,7 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 
 	@Transactional
 	private void saveXqYearlyCubeRebStat() {
-		// 汇总统计并保存weight总和>=100以上的股票
+		// 汇总统计并保存weight总和>=10以上的股票
 		List<CubeRebalanceStatisticsInfo> rebalanceStatisticsList = xqYearlyCubeRebalanceDao
 				.selectRebalanceStatistics();
 
@@ -356,7 +407,7 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 
 	@Transactional
 	private void saveXqMonthlyCubeRebStat() {
-		// 汇总统计并保存weight总和>=100以上的股票
+		// 汇总统计并保存weight总和>=10以上的股票
 		List<CubeRebalanceStatisticsInfo> rebalanceStatisticsList = xqMonthlyCubeRebalanceDao
 				.selectRebalanceStatistics();
 

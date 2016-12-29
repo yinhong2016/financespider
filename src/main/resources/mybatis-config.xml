@@ -34,5 +34,6 @@
 		<mapper resource="com/sevencolor/domain/mapping/XQYearlyCubeMapper.xml" />
 		<mapper resource="com/sevencolor/domain/mapping/XQYearlyCubeRebMapper.xml" />
 		<mapper resource="com/sevencolor/domain/mapping/XQYearlyCubeRebStatMapper.xml" />
+		<mapper resource="com/sevencolor/domain/mapping/XQSummeryCubeRebStatMapper.xml" />
 	</mappers>
 </configuration>

@@ -27,10 +27,10 @@ public class XQCubeInfoTask {
 	 * @return: void
 	 */
 	public void mostProfitableCubeDetail() {
-		// xqCubeService.getTop10ProfHSCubeInfo();
-		xqCubeService.getTop10ProfHSCubeByDay();
-		xqCubeService.getTop10ProfHSCubeByMonth();
-		xqCubeService.getTop10ProfHSCubeByYear();
+		xqCubeService.getTop10ProfHSCubeInfo();
+		// xqCubeService.getTop10ProfHSCubeByDay();
+		// xqCubeService.getTop10ProfHSCubeByMonth();
+		// xqCubeService.getTop10ProfHSCubeByYear();
 	}
 
 }

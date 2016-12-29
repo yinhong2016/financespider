@@ -200,6 +200,6 @@
 		stockSymbol,stockName,sum(currentWeight) as totalWeight
 		from
 		xq_daily_cube_rebalance
-		group by stockSymbol having totalWeight >= 100
+		group by stockSymbol having totalWeight >= 50
 	</select>
 </mapper>
