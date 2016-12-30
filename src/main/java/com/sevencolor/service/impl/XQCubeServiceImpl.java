@@ -205,7 +205,7 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 
 	/**
 	 * 
-	 * @Description: 将年收益和月收益排名靠前的组合的股票信息汇总，取出一周内共同的股票并保存入库
+	 * @Description: 将年收益和月收益排名靠前的组合的股票信息汇总，取出最近2天内共同的股票并保存入库
 	 * @return: void
 	 */
 	@Transactional
@@ -215,12 +215,11 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(new Date());
-		// 设置为前一周
-		calendar.add(Calendar.DAY_OF_MONTH, -7);
-		// 得到前一周某一天的时间
+		// 设置为二天前
+		calendar.add(Calendar.DAY_OF_MONTH, -2);
 		Date dBefore = calendar.getTime();
 
-		// 查询一周前年收益和月收益靠前的组合涉及的股票（已经经过统计）集合
+		// 查询2天前年收益和月收益靠前的组合涉及的股票（已经经过统计）集合
 		List<CubeRebalanceStatisticsInfo> monthlyCubeRebList = xqSummeryCubeDao
 				.selectMonthlyCubeRebalanceStatistics(dBefore.getTime());
 		List<CubeRebalanceStatisticsInfo> yearlyCubeRebList = xqSummeryCubeDao
