@@ -76,25 +76,37 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 	 * @Description: 获取最赚钱雪球组合（沪深按天、月、年排序前十的组合）详细信息
 	 * @return: void
 	 */
-	public void getTop10ProfHSCubeInfo() {
-		getTop10ProfHSCubeByDay();
-		getTop10ProfHSCubeByMonth();
-		getTop10ProfHSCubeByYear();
+	public void getTopNProfHSCubeInfo(int topN) {
+		getTopNProfHSCubeByDay(topN);
+		try {
+			Thread.sleep(30000);
+		} catch (InterruptedException e) {
+		}
+		getTopNProfHSCubeByMonth(topN);
+		try {
+			Thread.sleep(30000);
+		} catch (InterruptedException e) {
+		}
+		getTopNProfHSCubeByYear(topN);
+		try {
+			Thread.sleep(30000);
+		} catch (InterruptedException e) {
+		}
 		calXQCommCubeRebStat();
 	}
 
 	/**
-	 * @Description: 获取最赚钱雪球组合（沪深按天排序前十的组合）详细信息
+	 * @Description: 获取最赚钱雪球组合（沪深按天排序前N的组合）详细信息
 	 * @return: void
 	 */
-	public void getTop10ProfHSCubeByDay() {
+	public void getTopNProfHSCubeByDay(int topN) {
 
 		// 清除原有数据
 		truncateDailyCubeInfo();
 
-		// 获取沪深股市按天排序最赚钱前十雪球组合
+		// 获取沪深股市按天排序最赚钱前N雪球组合
 		MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(MostProfHSCubeCollector.Market.CN,
-				MostProfHSCubeCollector.Order_By.DAILY);
+				MostProfHSCubeCollector.Order_By.DAILY, topN);
 
 		// 雪球组合历史前十五股票持仓记录
 		HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();
@@ -124,17 +136,17 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 	}
 
 	/**
-	 * @Description: 获取最赚钱雪球组合（沪深按月份排序前十的组合）详细信息
+	 * @Description: 获取最赚钱雪球组合（沪深按月份排序前N的组合）详细信息
 	 * @return: void
 	 */
-	public void getTop10ProfHSCubeByMonth() {
+	public void getTopNProfHSCubeByMonth(int topN) {
 
 		// 清除原有数据
 		truncateMonthlyCubeInfo();
 
-		// 获取沪深股市按月排序最赚钱前十雪球组合
+		// 获取沪深股市按月排序最赚钱前N雪球组合
 		MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(MostProfHSCubeCollector.Market.CN,
-				MostProfHSCubeCollector.Order_By.MONTHLY);
+				MostProfHSCubeCollector.Order_By.MONTHLY, topN);
 
 		// 雪球组合历史前十五股票持仓记录
 		HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();
@@ -164,17 +176,17 @@ public class XQCubeServiceImpl implements XQCubeServiceI {
 	}
 
 	/**
-	 * @Description: 获取最赚钱雪球组合（沪深按年排序前十的组合）详细信息
+	 * @Description: 获取最赚钱雪球组合（沪深按年排序前N的组合）详细信息
 	 * @return: void
 	 */
-	public void getTop10ProfHSCubeByYear() {
+	public void getTopNProfHSCubeByYear(int topN) {
 
 		// 清除原有数据
 		truncateYearlyCubeInfo();
 
-		// 获取沪深股市按年排序最赚钱前十雪球组合
+		// 获取沪深股市按年排序最赚钱前N雪球组合
 		MostProfHSCubeCollector cubeCollector = new MostProfHSCubeCollector(MostProfHSCubeCollector.Market.CN,
-				MostProfHSCubeCollector.Order_By.YEARLY);
+				MostProfHSCubeCollector.Order_By.YEARLY, topN);
 
 		// 雪球组合历史前十五股票持仓记录
 		HSCubeLastBalancingMapper mapper = new HSCubeLastBalancingMapper();

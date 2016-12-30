@@ -13,18 +13,18 @@ package com.sevencolor.service;
  */
 public interface XQCubeServiceI {
 
-  public void getTop10ProfHSCubeByDay();
+	public void getTopNProfHSCubeByDay(int topN);
 
-  public void getTop10ProfHSCubeByMonth();
+	public void getTopNProfHSCubeByMonth(int topN);
 
-  public void getTop10ProfHSCubeByYear();
+	public void getTopNProfHSCubeByYear(int topN);
 
-  public void getTop10ProfHSCubeInfo();
+	public void getTopNProfHSCubeInfo(int topN);
 
-  // public void getTop20ProfActualCubeByMonth();
-  //
-  // public void getTop20ProfActualCubeByWeek();
-  //
-  // public void getTop20ProfActualCubeByYear();
+	// public void getTop20ProfActualCubeByMonth();
+	//
+	// public void getTop20ProfActualCubeByWeek();
+	//
+	// public void getTop20ProfActualCubeByYear();
 
 }

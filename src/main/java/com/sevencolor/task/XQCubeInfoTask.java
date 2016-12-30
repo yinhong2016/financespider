@@ -11,6 +11,7 @@ package com.sevencolor.task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.sevencolor.collector.MostProfHSCubeCollector;
 import com.sevencolor.service.XQCubeServiceI;
 
 /**
@@ -27,10 +28,7 @@ public class XQCubeInfoTask {
 	 * @return: void
 	 */
 	public void mostProfitableCubeDetail() {
-		xqCubeService.getTop10ProfHSCubeInfo();
-		// xqCubeService.getTop10ProfHSCubeByDay();
-		// xqCubeService.getTop10ProfHSCubeByMonth();
-		// xqCubeService.getTop10ProfHSCubeByYear();
+		xqCubeService.getTopNProfHSCubeInfo(MostProfHSCubeCollector.CUBE_SIZE_SHRESHOLD);
 	}
 
 }
